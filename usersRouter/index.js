@@ -10,6 +10,9 @@ const jwt = require('jsonwebtoken');
 //importing secret for jwt
 const secret = require('../config/secrets');
 
+//importing restricted middleware
+const restricted = require('../auth/restricted-middleware.js');
+
 //implement router
 const router = express.Router();
 
@@ -63,5 +66,15 @@ function genToken(user) {
   };
   return jwt.sign(payload, secret.jwtSecret, options);
 }
+
+//get all users
+router.get('/users', restricted, async (req, res) => {
+  try {
+    const users = await db.find();
+    res.status(200).json({ users });
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 module.exports = router;

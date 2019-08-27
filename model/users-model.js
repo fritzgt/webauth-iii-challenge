@@ -3,12 +3,12 @@ const db = require('../db-config');
 module.exports = {
   find,
   findByUser,
-  add,
-  update,
-  remove
+  add
 };
 
-function find() {}
+function find() {
+  return db('users');
+}
 
 //Login by finding a matching username
 function findByUser(username) {
@@ -21,7 +21,3 @@ function findByUser(username) {
 function add(newUser) {
   return db('users').insert(newUser);
 }
-
-function update(changes, id) {}
-
-function remove(id) {}
