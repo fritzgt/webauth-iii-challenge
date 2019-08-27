@@ -12,7 +12,9 @@ function find() {}
 
 function findById(id) {}
 
-function add(user) {}
+function add(newUser) {
+  return db('users').insert(newUser);
+}
 
 function update(changes, id) {}
 
