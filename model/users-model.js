@@ -2,7 +2,7 @@ const db = require('../db-config');
 
 module.exports = {
   find,
-  findById,
+  findByUser,
   add,
   update,
   remove
@@ -10,8 +10,14 @@ module.exports = {
 
 function find() {}
 
-function findById(id) {}
+//Login by finding a matching username
+function findByUser(username) {
+  return db('users')
+    .where('username', '=', username)
+    .first();
+}
 
+//Register a new user
 function add(newUser) {
   return db('users').insert(newUser);
 }
