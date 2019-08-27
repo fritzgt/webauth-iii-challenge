@@ -7,6 +7,8 @@ const bcrypt = require('bcryptjs');
 
 //import JWT for login signature
 const jwt = require('jsonwebtoken');
+//importing secret for jwt
+const secret = require('../config/secrets');
 
 //implement router
 const router = express.Router();
@@ -40,7 +42,9 @@ router.post('/login', async (req, res) => {
     const user = await db.findByUser(username);
     //check if the user exist and if the hash password matches
     if (user && bcrypt.compareSync(password, user.password)) {
-      res.status(200).json({ message: 'You are logged in!' });
+      //creating token for JWT
+      const token = genToken(user);
+      res.status(200).json({ message: 'You are logged in!', token });
     } else {
       res.status().json({ message: 'Incorrecct credentials' });
     }
@@ -48,5 +52,16 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Server error!' });
   }
 });
+//creating function to creat token
+function genToken(user) {
+  const payload = {
+    subject: user.id,
+    username: user.username
+  };
+  const options = {
+    expiresIn: '1d'
+  };
+  return jwt.sign(payload, secret.jwtSecret, options);
+}
 
 module.exports = router;
