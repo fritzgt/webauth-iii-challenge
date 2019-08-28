@@ -7,7 +7,10 @@ module.exports = {
 };
 
 function find(currentDep) {
-  return db('users').where('department', currentDep);
+  return db
+    .select('username', 'department')
+    .from('users')
+    .where('department', currentDep);
 }
 
 //Login by finding a matching username

@@ -63,7 +63,8 @@ function genToken(user) {
   const payload = {
     subject: user.id,
     username: user.username,
-    //getting the department to then display users based on this
+    //getting the department to then display users based on
+    //the current user's dep
     department: user.department
   };
   const options = {
