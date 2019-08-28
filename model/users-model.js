@@ -6,8 +6,8 @@ module.exports = {
   add
 };
 
-function find() {
-  return db('users');
+function find(currentDep) {
+  return db('users').where('department', currentDep);
 }
 
 //Login by finding a matching username

@@ -47,19 +47,24 @@ router.post('/login', async (req, res) => {
     if (user && bcrypt.compareSync(password, user.password)) {
       //creating token for JWT
       const token = genToken(user);
+      //place token in the response so then can be copy
+      //and paste in the headers for testing
       res.status(200).json({ message: 'You are logged in!', token });
     } else {
-      res.status().json({ message: 'Incorrecct credentials' });
+      res.status().json({ message: 'Incorrect credentials' });
     }
   } catch {
     res.status(500).json({ message: 'Server error!' });
   }
 });
+
 //creating function to creat token
 function genToken(user) {
   const payload = {
     subject: user.id,
-    username: user.username
+    username: user.username,
+    //getting the department to then display users based on this
+    department: user.department
   };
   const options = {
     expiresIn: '1d'
@@ -69,8 +74,13 @@ function genToken(user) {
 
 //get all users
 router.get('/users', restricted, async (req, res) => {
+  //getting the department of the current user to
+  //display only users from the same dep
+  const currentDep = req.decodedJWT.department;
   try {
-    const users = await db.find();
+    //pass the dep us an argument to filter users
+    const users = await db.find(currentDep);
+    console.log(currentDep);
     res.status(200).json({ users });
   } catch {
     res.status(500).json({ message: 'Server error' });
